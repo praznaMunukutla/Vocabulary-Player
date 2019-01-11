@@ -13,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mapzen.speakerbox.Speakerbox;
+
 import java.util.List;
 
 import io.supercharge.shimmerlayout.ShimmerLayout;
@@ -24,6 +26,7 @@ public class WorddefinitionAdapter extends RecyclerView.Adapter<WorddefinitionAd
 
     private Context mContext;
     private List<Worddefinition> albumList;
+    private Speakerbox speakerBox;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView dictwordtitle, dictworddef;
@@ -44,9 +47,10 @@ public class WorddefinitionAdapter extends RecyclerView.Adapter<WorddefinitionAd
     }
 
 
-    public WorddefinitionAdapter(Context mContext, List<Worddefinition> albumList) {
+    public WorddefinitionAdapter(Context mContext, List<Worddefinition> albumList, Speakerbox speakerBox) {
         this.mContext = mContext;
         this.albumList = albumList;
+        this.speakerBox = speakerBox;
     }
 
     @Override
@@ -85,6 +89,7 @@ public class WorddefinitionAdapter extends RecyclerView.Adapter<WorddefinitionAd
             @Override
             public void onClick(View view) {
                 //play audio file;
+                speakerBox.play(holder.dictwordtitle.getText().toString());
             }
         });
     }

@@ -75,6 +75,7 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
+import com.mapzen.speakerbox.Speakerbox;
 import com.masterwok.opensubtitlesandroid.OpenSubtitlesUrlBuilder;
 import com.masterwok.opensubtitlesandroid.models.OpenSubtitleItem;
 import com.masterwok.opensubtitlesandroid.services.OpenSubtitlesService;
@@ -160,6 +161,8 @@ public class PlayerActivity extends AppCompatActivity {
   private List<Worddefinition> worddefList;
   private List<WordMeanings> wordmeaningList;
   private RelativeLayout worddefMainContentRL;
+
+  private Speakerbox mSpeakerBox;
 
   private void createLoadCaptionOptions(){
       dialogLoadCaptionLists.add(new DialogList(R.drawable.ic_cloud, "Cloud", true, false, ""));
@@ -273,7 +276,7 @@ public class PlayerActivity extends AppCompatActivity {
       Worddefinition a = null;
 
       for(int i = 0; i < splitStr.size(); i++) {
-          a = new Worddefinition("", "", false, false);
+          a = new Worddefinition("", "", true, false);
           worddefList.add(a);
       }
 
@@ -342,7 +345,7 @@ public class PlayerActivity extends AppCompatActivity {
       worddefRecyclerView = (RecyclerView) findViewById(R.id.worddef_recycler_view);
       worddefList = new ArrayList<>();
       wordmeaningList = new ArrayList<>();
-      worddefAdapter = new WorddefinitionAdapter(this, worddefList);
+      worddefAdapter = new WorddefinitionAdapter(this, worddefList, mSpeakerBox);
 
       worddefMainContentRL = (RelativeLayout) findViewById(R.id.worddef_main_content);
       RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 1);
@@ -357,6 +360,10 @@ public class PlayerActivity extends AppCompatActivity {
       mOpenSubtitlesUrlBuilder = new OpenSubtitlesUrlBuilder();
   }
 
+  private void createSpeakerBox(){
+      mSpeakerBox = new Speakerbox(getApplication());
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -364,6 +371,7 @@ public class PlayerActivity extends AppCompatActivity {
 
     Log.d("PlayerActiva","onCreate");
     playerView = findViewById(R.id.video_view);
+    createSpeakerBox();
     createBottomSheetOptions();
     createBottomSheetPlaybackSpeedOptions();
     createBottomSheetOnOffOptions();

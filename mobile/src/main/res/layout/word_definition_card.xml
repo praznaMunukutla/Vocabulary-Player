@@ -46,7 +46,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:scaleType="centerCrop"
-                    android:visibility="invisible"
                     android:src="@drawable/ic_volume" />
 
                 <ImageView
@@ -56,7 +55,6 @@
                     android:layout_toLeftOf="@id/dictwordaudio"
                     android:layout_marginRight="@dimen/ic_dict_icons_margin"
                     android:scaleType="centerCrop"
-                    android:visibility="invisible"
                     android:src="@drawable/ic_star" />
             </RelativeLayout>
 
