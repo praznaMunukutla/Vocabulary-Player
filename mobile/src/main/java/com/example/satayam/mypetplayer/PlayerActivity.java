@@ -16,6 +16,7 @@
 package com.example.satayam.mypetplayer;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -615,12 +616,12 @@ public class PlayerActivity extends AppCompatActivity {
         protected void onPostExecute(Long result) {
             TextView subtitlesHeader = (TextView) findViewById(R.id.subtitles_header);
             final EditText searchManually = (EditText) findViewById(R.id.search_manually);
-            findViewById(R.id.dots).setVisibility(View.GONE);
+            View view = findViewById(R.id.dots);
+            if(view != null)
+                view.setVisibility(View.GONE);
             if(mSubtitleList != null && mSubtitleList.length != 0) {
                 prepareSubtitleData();
-
                 subtitlesHeader.setText("Select Caption");
-
                 if (subtitleLoadingDialogAdapter != null)
                     subtitleLoadingDialogAdapter.notifyDataSetChanged();
             } else {
@@ -632,6 +633,7 @@ public class PlayerActivity extends AppCompatActivity {
                         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                             mManualSearchTitle = searchManually.getText().toString();
                             subtitleLoadingDialog.dismiss();
+                            hideSystemUi();
                             return true;
                         }
                         return false;
@@ -733,6 +735,12 @@ public class PlayerActivity extends AppCompatActivity {
                                                         public void onChoosePath(String path, File pathFile) {
                                                             addSubtitlesToMedia(Uri.parse("file:///"+path));
                                                             Toast.makeText(PlayerActivity.this, "Syncing Caption", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    })
+                                                    .withOnDismissListener(new DialogInterface.OnDismissListener(){
+                                                        @Override
+                                                        public void onDismiss(DialogInterface dialog) {
+                                                            hideSystemUi();
                                                         }
                                                     })
                                                     .build()

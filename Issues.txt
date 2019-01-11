@@ -1,0 +1,4 @@
+1. align file chooser, removing the date and size of the file
+2. remove the highlight item in the file chooser
+3. hide status bar on invoking file chooser and also when clicked edittextview
+
