@@ -45,5 +45,5 @@ dependencies {
     //loading dots
     implementation 'com.github.tajchert:WaitingDots:0.4.0'
     //tts
-    compile 'com.mapzen.android:speakerbox:1.4.1'
+    implementation 'com.mapzen.android:speakerbox:1.4.1'
 }
