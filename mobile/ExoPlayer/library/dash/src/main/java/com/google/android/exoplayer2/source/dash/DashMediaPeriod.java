@@ -42,9 +42,12 @@ import com.google.android.exoplayer2.source.dash.manifest.Period;
 import com.google.android.exoplayer2.source.dash.manifest.Representation;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.upstream.Allocator;
+import com.google.android.exoplayer2.upstream.LoadErrorHandlingPolicy;
 import com.google.android.exoplayer2.upstream.LoaderErrorThrower;
+import com.google.android.exoplayer2.upstream.TransferListener;
 import com.google.android.exoplayer2.util.MimeTypes;
 import java.io.IOException;
+import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -60,7 +63,8 @@ import java.util.List;
 
   /* package */ final int id;
   private final DashChunkSource.Factory chunkSourceFactory;
-  private final int minLoadableRetryCount;
+  private final @Nullable TransferListener transferListener;
+  private final LoadErrorHandlingPolicy loadErrorHandlingPolicy;
   private final long elapsedRealtimeOffset;
   private final LoaderErrorThrower manifestLoaderErrorThrower;
   private final Allocator allocator;
@@ -70,8 +74,8 @@ import java.util.List;
   private final PlayerEmsgHandler playerEmsgHandler;
   private final IdentityHashMap<ChunkSampleStream<DashChunkSource>, PlayerTrackEmsgHandler>
       trackEmsgHandlerBySampleStream;
+  private final EventDispatcher eventDispatcher;
 
-  private EventDispatcher eventDispatcher;
   private @Nullable Callback callback;
   private ChunkSampleStream<DashChunkSource>[] sampleStreams;
   private EventSampleStream[] eventSampleStreams;
@@ -86,7 +90,8 @@ import java.util.List;
       DashManifest manifest,
       int periodIndex,
       DashChunkSource.Factory chunkSourceFactory,
-      int minLoadableRetryCount,
+      @Nullable TransferListener transferListener,
+      LoadErrorHandlingPolicy loadErrorHandlingPolicy,
       EventDispatcher eventDispatcher,
       long elapsedRealtimeOffset,
       LoaderErrorThrower manifestLoaderErrorThrower,
@@ -97,7 +102,8 @@ import java.util.List;
     this.manifest = manifest;
     this.periodIndex = periodIndex;
     this.chunkSourceFactory = chunkSourceFactory;
-    this.minLoadableRetryCount = minLoadableRetryCount;
+    this.transferListener = transferListener;
+    this.loadErrorHandlingPolicy = loadErrorHandlingPolicy;
     this.eventDispatcher = eventDispatcher;
     this.elapsedRealtimeOffset = elapsedRealtimeOffset;
     this.manifestLoaderErrorThrower = manifestLoaderErrorThrower;
@@ -126,13 +132,6 @@ import java.util.List;
    */
   public void updateManifest(DashManifest manifest, int periodIndex) {
     this.manifest = manifest;
-    if (this.periodIndex != periodIndex) {
-      eventDispatcher =
-          eventDispatcher.withParameters(
-              /* windowIndex= */ 0,
-              eventDispatcher.mediaPeriodId.copyWithPeriodIndex(periodIndex),
-              manifest.getPeriod(periodIndex).startMs);
-    }
     this.periodIndex = periodIndex;
     playerEmsgHandler.updateManifest(manifest);
     if (sampleStreams != null) {
@@ -597,7 +596,8 @@ import java.util.List;
             elapsedRealtimeOffset,
             enableEventMessageTrack,
             enableCea608Track,
-            trackPlayerEmsgHandler);
+            trackPlayerEmsgHandler,
+            transferListener);
     ChunkSampleStream<DashChunkSource> stream =
         new ChunkSampleStream<>(
             trackGroupInfo.trackType,
@@ -607,7 +607,7 @@ import java.util.List;
             this,
             allocator,
             positionUs,
-            minLoadableRetryCount,
+            loadErrorHandlingPolicy,
             eventDispatcher);
     synchronized (this) {
       // The map is also accessed on the loading thread so synchronize access.
@@ -661,6 +661,7 @@ import java.util.List;
 
   private static final class TrackGroupInfo {
 
+    @Documented
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({CATEGORY_PRIMARY, CATEGORY_EMBEDDED, CATEGORY_MANIFEST_EVENTS})
     public @interface TrackGroupCategory {}

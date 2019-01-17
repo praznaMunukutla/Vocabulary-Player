@@ -19,16 +19,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.drawable.Animatable2;
-import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -91,7 +89,7 @@ import java.util.Locale;
  *       below for more details.
  *       <ul>
  *         <li>Corresponding method: None
- *         <li>Default: {@code R.id.exo_player_control_view}
+ *         <li>Default: {@code R.layout.exo_player_control_view}
  *       </ul>
  * </ul>
  *
@@ -195,19 +193,11 @@ public class PlayerControlView extends FrameLayout {
 
   private static final long MAX_POSITION_FOR_SEEK_TO_PREVIOUS = 3000;
 
-  private boolean didClickPlayPause = false;
-  private boolean playPauseButtonState = false; //false -> pause icon; true -> play icon;
-
-  private ImageView playPauseImageview;
-  private AnimatedVectorDrawable playToPause;
-  private AnimatedVectorDrawable pauseToPlay;
-
   private final ComponentListener componentListener;
   private final View previousButton;
   private final View nextButton;
   private final View playButton;
   private final View pauseButton;
-  private final View playPauseButton;
   private final View fastForwardButton;
   private final View rewindButton;
   private final ImageView repeatToggleButton;
@@ -219,6 +209,8 @@ public class PlayerControlView extends FrameLayout {
   private final Formatter formatter;
   private final Timeline.Period period;
   private final Timeline.Window window;
+  private final Runnable updateProgressAction;
+  private final Runnable hideAction;
 
   private final Drawable repeatOffButtonDrawable;
   private final Drawable repeatOneButtonDrawable;
@@ -247,22 +239,6 @@ public class PlayerControlView extends FrameLayout {
   private long[] extraAdGroupTimesMs;
   private boolean[] extraPlayedAdGroups;
 
-  private final Runnable updateProgressAction =
-      new Runnable() {
-        @Override
-        public void run() {
-          updateProgress();
-        }
-      };
-
-  private final Runnable hideAction =
-      new Runnable() {
-        @Override
-        public void run() {
-          hide();
-        }
-      };
-
   public PlayerControlView(Context context) {
     this(context, null);
   }
@@ -275,7 +251,6 @@ public class PlayerControlView extends FrameLayout {
     this(context, attrs, defStyleAttr, attrs);
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public PlayerControlView(
       Context context, AttributeSet attrs, int defStyleAttr, AttributeSet playbackAttrs) {
     super(context, attrs, defStyleAttr);
@@ -315,6 +290,8 @@ public class PlayerControlView extends FrameLayout {
     extraPlayedAdGroups = new boolean[0];
     componentListener = new ComponentListener();
     controlDispatcher = new com.google.android.exoplayer2.DefaultControlDispatcher();
+    updateProgressAction = this::updateProgress;
+    hideAction = this::hide;
 
     LayoutInflater.from(context).inflate(controllerLayoutId, this);
     setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
@@ -329,12 +306,6 @@ public class PlayerControlView extends FrameLayout {
     if (playButton != null) {
       playButton.setOnClickListener(componentListener);
     }
-
-    playPauseButton = findViewById(R.id.exo_play_pause);
-     if (playPauseButton != null) {
-         playPauseButton.setOnClickListener(componentListener);
-    }
-
     pauseButton = findViewById(R.id.exo_pause);
     if (pauseButton != null) {
       pauseButton.setOnClickListener(componentListener);
@@ -373,10 +344,6 @@ public class PlayerControlView extends FrameLayout {
         resources.getString(R.string.exo_controls_repeat_one_description);
     repeatAllButtonContentDescription =
         resources.getString(R.string.exo_controls_repeat_all_description);
-
-    playPauseImageview = (ImageView) findViewById(R.id.exo_play_pause);
-    playToPause = (AnimatedVectorDrawable) getResources().getDrawable(R.drawable.animated_vector_play_to_pause);
-    pauseToPlay = (AnimatedVectorDrawable) getResources().getDrawable(R.drawable.animated_vector_pause_to_play);
   }
 
   @SuppressWarnings("ResourceType")
@@ -396,9 +363,14 @@ public class PlayerControlView extends FrameLayout {
   /**
    * Sets the {@link Player} to control.
    *
-   * @param player The {@link Player} to control.
+   * @param player The {@link Player} to control, or {@code null} to detach the current player. Only
+   *     players which are accessed on the main thread are supported ({@code
+   *     player.getApplicationLooper() == Looper.getMainLooper()}).
    */
-  public void setPlayer(Player player) {
+  public void setPlayer(@Nullable Player player) {
+    Assertions.checkState(Looper.myLooper() == Looper.getMainLooper());
+    Assertions.checkArgument(
+        player == null || player.getApplicationLooper() == Looper.getMainLooper());
     if (this.player == player) {
       return;
     }
@@ -557,6 +529,7 @@ public class PlayerControlView extends FrameLayout {
         controlDispatcher.dispatchSetRepeatMode(player, Player.REPEAT_MODE_ALL);
       }
     }
+    updateRepeatModeButton();
   }
 
   /** Returns whether the shuffle button is shown. */
@@ -578,7 +551,6 @@ public class PlayerControlView extends FrameLayout {
    * Shows the playback controls. If {@link #getShowTimeoutMs()} is positive then the controls will
    * be automatically hidden after this duration of time has elapsed without user input.
    */
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public void show() {
     if (!isVisible()) {
       setVisibility(VISIBLE);
@@ -622,7 +594,6 @@ public class PlayerControlView extends FrameLayout {
     }
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   private void updateAll() {
     updatePlayPauseButton();
     updateNavigation();
@@ -631,31 +602,20 @@ public class PlayerControlView extends FrameLayout {
     updateProgress();
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   private void updatePlayPauseButton() {
     if (!isVisible() || !isAttachedToWindow) {
       return;
     }
     boolean requestPlayPauseFocus = false;
     boolean playing = isPlaying();
-
-    boolean needsUpdate = false;
-    if (((playing && playPauseButtonState) || (!playing && !playPauseButtonState))) {
-        needsUpdate = true;
+    if (playButton != null) {
+      requestPlayPauseFocus |= playing && playButton.isFocused();
+      playButton.setVisibility(playing ? View.GONE : View.VISIBLE);
     }
-
-    if(didClickPlayPause || needsUpdate) {
-        AnimatedVectorDrawable drawable = playing ? playToPause : pauseToPlay;
-        if(playPauseImageview != null)
-            playPauseImageview.setImageDrawable(drawable);
-        drawable.start();
-        didClickPlayPause = false;
-        playPauseButtonState = playing ? false : true;
+    if (pauseButton != null) {
+      requestPlayPauseFocus |= !playing && pauseButton.isFocused();
+      pauseButton.setVisibility(!playing ? View.GONE : View.VISIBLE);
     }
-
-    if (playPauseButton != null)
-        requestPlayPauseFocus |= !playing && playPauseButton.isFocused();
-
     if (requestPlayPauseFocus) {
       requestPlayPauseFocus();
     }
@@ -674,9 +634,8 @@ public class PlayerControlView extends FrameLayout {
       int windowIndex = player.getCurrentWindowIndex();
       timeline.getWindow(windowIndex, window);
       isSeekable = window.isSeekable;
-      enablePrevious =
-          isSeekable || !window.isDynamic || player.getPreviousWindowIndex() != C.INDEX_UNSET;
-      enableNext = window.isDynamic || player.getNextWindowIndex() != C.INDEX_UNSET;
+      enablePrevious = isSeekable || !window.isDynamic || player.hasPrevious();
+      enableNext = window.isDynamic || player.hasNext();
     }
     setButtonEnabled(enablePrevious, previousButton);
     setButtonEnabled(enableNext, nextButton);
@@ -751,7 +710,7 @@ public class PlayerControlView extends FrameLayout {
     long bufferedPosition = 0;
     long duration = 0;
     if (player != null) {
-      long currentWindowTimeBarOffsetUs = 0;
+      long currentWindowTimeBarOffsetMs = 0;
       long durationUs = 0;
       int adGroupCount = 0;
       Timeline timeline = player.getCurrentTimeline();
@@ -762,7 +721,7 @@ public class PlayerControlView extends FrameLayout {
             multiWindowTimeBar ? timeline.getWindowCount() - 1 : currentWindowIndex;
         for (int i = firstWindowIndex; i <= lastWindowIndex; i++) {
           if (i == currentWindowIndex) {
-            currentWindowTimeBarOffsetUs = durationUs;
+            currentWindowTimeBarOffsetMs = C.usToMs(durationUs);
           }
           timeline.getWindow(i, window);
           if (window.durationUs == C.TIME_UNSET) {
@@ -798,15 +757,8 @@ public class PlayerControlView extends FrameLayout {
         }
       }
       duration = C.usToMs(durationUs);
-      position = C.usToMs(currentWindowTimeBarOffsetUs);
-      bufferedPosition = position;
-      if (player.isPlayingAd()) {
-        position += player.getContentPosition();
-        bufferedPosition = position;
-      } else {
-        position += player.getCurrentPosition();
-        bufferedPosition += player.getBufferedPosition();
-      }
+      position = currentWindowTimeBarOffsetMs + player.getContentPosition();
+      bufferedPosition = currentWindowTimeBarOffsetMs + player.getContentBufferedPosition();
       if (timeBar != null) {
         int extraAdGroupCount = extraAdGroupTimesMs.length;
         int totalAdGroupCount = adGroupCount + extraAdGroupCount;
@@ -860,8 +812,11 @@ public class PlayerControlView extends FrameLayout {
 
   private void requestPlayPauseFocus() {
     boolean playing = isPlaying();
-    if(playPauseButton != null)
-        playPauseButton.requestFocus();
+    if (!playing && playButton != null) {
+      playButton.requestFocus();
+    } else if (playing && pauseButton != null) {
+      pauseButton.requestFocus();
+    }
   }
 
   private void setButtonEnabled(boolean enabled, View view) {
@@ -875,7 +830,7 @@ public class PlayerControlView extends FrameLayout {
 
   private void previous() {
     Timeline timeline = player.getCurrentTimeline();
-    if (timeline.isEmpty()) {
+    if (timeline.isEmpty() || player.isPlayingAd()) {
       return;
     }
     int windowIndex = player.getCurrentWindowIndex();
@@ -892,14 +847,14 @@ public class PlayerControlView extends FrameLayout {
 
   private void next() {
     Timeline timeline = player.getCurrentTimeline();
-    if (timeline.isEmpty()) {
+    if (timeline.isEmpty() || player.isPlayingAd()) {
       return;
     }
     int windowIndex = player.getCurrentWindowIndex();
     int nextWindowIndex = player.getNextWindowIndex();
     if (nextWindowIndex != C.INDEX_UNSET) {
       seekTo(nextWindowIndex, C.TIME_UNSET);
-    } else if (timeline.getWindow(windowIndex, window, false).isDynamic) {
+    } else if (timeline.getWindow(windowIndex, window).isDynamic) {
       seekTo(windowIndex, C.TIME_UNSET);
     }
   }
@@ -960,7 +915,6 @@ public class PlayerControlView extends FrameLayout {
     seekTo(windowIndex, positionMs);
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   @Override
   public void onAttachedToWindow() {
     super.onAttachedToWindow();
@@ -984,6 +938,16 @@ public class PlayerControlView extends FrameLayout {
     isAttachedToWindow = false;
     removeCallbacks(updateProgressAction);
     removeCallbacks(hideAction);
+  }
+
+  @Override
+  public final boolean dispatchTouchEvent(MotionEvent ev) {
+    if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+      removeCallbacks(hideAction);
+    } else if (ev.getAction() == MotionEvent.ACTION_UP) {
+      hideAfterTimeout();
+    }
+    return super.dispatchTouchEvent(ev);
   }
 
   @Override
@@ -1071,12 +1035,11 @@ public class PlayerControlView extends FrameLayout {
     return true;
   }
 
-  private final class ComponentListener extends Player.DefaultEventListener
-      implements TimeBar.OnScrubListener, OnClickListener {
+  private final class ComponentListener
+      implements Player.EventListener, TimeBar.OnScrubListener, OnClickListener {
 
     @Override
     public void onScrubStart(TimeBar timeBar, long position) {
-      removeCallbacks(hideAction);
       scrubbing = true;
     }
 
@@ -1093,7 +1056,6 @@ public class PlayerControlView extends FrameLayout {
       if (!canceled && player != null) {
         seekToTimeBarPosition(position);
       }
-      hideAfterTimeout();
     }
 
     @Override
@@ -1139,27 +1101,7 @@ public class PlayerControlView extends FrameLayout {
           fastForward();
         } else if (rewindButton == view) {
           rewind();
-        } else if(playPauseButton == view){
-            didClickPlayPause = true;
-            boolean playing = isPlaying();
-            if(playing){
-                //pause
-                playPauseButtonState = false; // showing pause icon
-                controlDispatcher.dispatchSetPlayWhenReady(player, false);
-            } else {
-                //play
-                playPauseButtonState = true; // showing play icon
-                if (player.getPlaybackState() == Player.STATE_IDLE) {
-                    if (playbackPreparer != null) {
-                        playbackPreparer.preparePlayback();
-                    }
-                } else if (player.getPlaybackState() == Player.STATE_ENDED) {
-                    controlDispatcher.dispatchSeekTo(player, player.getCurrentWindowIndex(), C.TIME_UNSET);
-                }
-                controlDispatcher.dispatchSetPlayWhenReady(player, true);
-            }
-        }
-        else if (playButton == view) {
+        } else if (playButton == view) {
           if (player.getPlaybackState() == Player.STATE_IDLE) {
             if (playbackPreparer != null) {
               playbackPreparer.preparePlayback();
@@ -1177,7 +1119,6 @@ public class PlayerControlView extends FrameLayout {
           controlDispatcher.dispatchSetShuffleModeEnabled(player, !player.getShuffleModeEnabled());
         }
       }
-      hideAfterTimeout();
     }
   }
 }

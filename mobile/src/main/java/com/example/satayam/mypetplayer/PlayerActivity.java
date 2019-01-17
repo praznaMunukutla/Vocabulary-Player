@@ -61,6 +61,8 @@ import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
+import com.google.android.exoplayer2.drm.DefaultDrmSessionManager;
+import com.google.android.exoplayer2.drm.FrameworkMediaCrypto;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.MergingMediaSource;
@@ -135,6 +137,8 @@ public class PlayerActivity extends AppCompatActivity {
   private DefaultDataSourceFactory dataSourceFactory;
   private MediaSource mediaSource;
   private MediaSource videoSource;
+  private DefaultTrackSelector trackSelector;
+  private DefaultTrackSelector.Parameters trackSelectorParameters;
 
   private  OpenSubtitlesService mOpenSubtitlesService;
   private OpenSubtitlesUrlBuilder mOpenSubtitlesUrlBuilder;
@@ -421,15 +425,20 @@ public class PlayerActivity extends AppCompatActivity {
     }
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
   private void initializePlayer(String pfilepath, String pfiletitle) {
     if (player == null) {
-      // a factory to create an AdaptiveVideoTrackSelection
-      TrackSelection.Factory adaptiveTrackSelectionFactory =
-          new AdaptiveTrackSelection.Factory(BANDWIDTH_METER);
-      // let the factory create a player instance with default components
-      player = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(this),
-          new DefaultTrackSelector(adaptiveTrackSelectionFactory), new DefaultLoadControl());
+      TrackSelection.Factory trackSelectionFactory = new AdaptiveTrackSelection.Factory();
+      DefaultRenderersFactory renderersFactory =
+                new DefaultRenderersFactory(this, DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
+
+      trackSelector = new DefaultTrackSelector(trackSelectionFactory);
+      trackSelectorParameters = new DefaultTrackSelector.ParametersBuilder().build();
+      trackSelector.setParameters(trackSelectorParameters);
+      DefaultDrmSessionManager<FrameworkMediaCrypto> drmSessionManager = null;
+      player =
+                ExoPlayerFactory.newSimpleInstance(
+                        /* context= */ this, renderersFactory, trackSelector, drmSessionManager);
       playerView.setPlayer(player);
       player.setPlayWhenReady(playWhenReady);
       player.seekTo(currentWindow, playbackPosition);
@@ -465,20 +474,17 @@ public class PlayerActivity extends AppCompatActivity {
 
         @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-            if (playbackState != SimpleExoPlayer.STATE_ENDED) {
-                if (!isPlaying()) {
-                    // paused, get the sutitle text now;
-                    String subtitle = player.getSubtitle();
-                    Log.d("PlayerActiva", "onPlayerStateChanged: player paused; subtitle:"+subtitle);
-                    if(subtitle.length() != 0) {
-                        launchDictionaryService(subtitle);
-                    }
-                } else {
-                    hideVocabList();
+            if (!isPlaying()) {
+                // paused, get the sutitle text now;
+                String subtitle = player.getSubtitle();
+                Log.d("PlayerActiva", "onPlayerStateChanged: player paused; subtitle:"+subtitle);
+                if(subtitle.length() != 0) {
+                    launchDictionaryService(subtitle);
                 }
+            } else {
+                hideVocabList();
             }
         }
-
         @Override
         public void onRepeatModeChanged(int repeatMode) {}
         @Override
@@ -540,7 +546,7 @@ public class PlayerActivity extends AppCompatActivity {
 
   public void addSubtitlesToMedia(Uri uri){
       Log.d("PlayerActiva", uri.toString());
-      Format subtitleFormat = Format.createTextSampleFormat(null, MimeTypes.APPLICATION_SUBRIP, C.SELECTION_FLAG_DEFAULT, "en");
+      Format subtitleFormat = Format.createTextSampleFormat(null, MimeTypes.APPLICATION_SUBRIP, C.SELECTION_FLAG_FORCED, null);
       //MediaSource subtitleSource = new SingleSampleMediaSource(uri, dataSourceFactory, subtitleFormat, C.TIME_UNSET);
       long duration = player.getDuration();
       Log.d("PlayerActiva", "addSubtitlesToMedia: "+duration);
@@ -741,7 +747,7 @@ public class PlayerActivity extends AppCompatActivity {
                                                     .withChosenListener(new ChooserDialog.Result() {
                                                         @Override
                                                         public void onChoosePath(String path, File pathFile) {
-                                                            addSubtitlesToMedia(Uri.parse("file:///"+path));
+                                                            addSubtitlesToMedia(Uri.parse("file://"+path));
                                                             Toast.makeText(PlayerActivity.this, "Syncing Caption", Toast.LENGTH_SHORT).show();
                                                         }
                                                     })
