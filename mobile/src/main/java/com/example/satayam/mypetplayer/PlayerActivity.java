@@ -129,6 +129,7 @@ public class PlayerActivity extends AppCompatActivity {
   public ArrayList<DialogList> dialogOnOffLists = new ArrayList<DialogList>();
   public ArrayList<SubtitleDialogList> subtitleLoadingList = new ArrayList<SubtitleDialogList>();
   public ArrayList<SubtitleDialogList> subtitleTitleList = new ArrayList<SubtitleDialogList>();
+  public ArrayList<SubtitleDialogList> subtitleManualTitleList = new ArrayList<SubtitleDialogList>();
   public SubtitleDialogAdapter subtitleLoadingDialogAdapter = null;
 
   public DialogPlus subtitleLoadingDialog = null;
@@ -169,7 +170,8 @@ public class PlayerActivity extends AppCompatActivity {
   private Speakerbox mSpeakerBox;
 
   private void createLoadCaptionOptions(){
-      dialogLoadCaptionLists.add(new DialogList(R.drawable.ic_cloud, "Cloud", true, false, ""));
+      dialogLoadCaptionLists.add(new DialogList(R.drawable.ic_cloud, "Cloud Automatically", true, false, ""));
+      dialogLoadCaptionLists.add(new DialogList(R.drawable.ic_keyboard, "Cloud Manually", true, false, ""));
       dialogLoadCaptionLists.add(new DialogList(R.drawable.ic_smartphone, "Internal Storage", true, false, ""));
   }
   private void createBottomSheetOptions() {
@@ -615,10 +617,13 @@ public class PlayerActivity extends AppCompatActivity {
     private class GetSubtitlesForVideo extends AsyncTask<String, Integer, Long> {
         protected Long doInBackground(String... string) {
             try {
-                mSubtitleList =  mOpenSubtitlesService.search(OpenSubtitlesService.TemporaryUserAgent, mOpenSubtitlesUrlBuilder
-                        .query(string[0])
-                        .subLanguageId(string[1])
-                        .build());
+                if(string[0].length() != 0)
+                    mSubtitleList =  mOpenSubtitlesService.search(OpenSubtitlesService.TemporaryUserAgent, mOpenSubtitlesUrlBuilder
+                            .query(string[0])
+                            .subLanguageId(string[1])
+                            .build());
+                else
+                    mSubtitleList = null;
             }
             catch(Exception e){}
             long listLen = mSubtitleList != null ? mSubtitleList.length : 0;
@@ -688,6 +693,38 @@ public class PlayerActivity extends AppCompatActivity {
       new GetSubtitlesForVideo().execute(titleMedia, "eng");
   }
 
+ public void searchCloudManually(){
+     subtitleLoadingDialogAdapter = new SubtitleDialogAdapter(this, subtitleManualTitleList);
+     DialogPlus dialog = DialogPlus.newDialog(this)
+             .setHeader(R.layout.subtitles_manual_search)
+             .setAdapter(subtitleLoadingDialogAdapter)
+             .setOnDismissListener(new OnDismissListener() {
+                 @Override
+                 public void onDismiss(@NonNull DialogPlus dialog) {
+                     hideSystemUi();
+                     if(mManualSearchTitle != null) {
+                         String searchTitle = mManualSearchTitle;
+                         mManualSearchTitle = null;
+                         loadCaptionsFromWeb(searchTitle);
+                     }
+                 }
+             })
+             .create();
+     dialog.show();
+     final EditText searchManually = (EditText) findViewById(R.id.search_title_manually);
+     searchManually.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+         @Override
+         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                 mManualSearchTitle = searchManually.getText().toString();
+                 dialog.dismiss();
+                 return true;
+             }
+             return false;
+         }
+     });
+ }
+
   public void onClickOptions(View view){
     Log.d("PlayerActiva","onClickOptions");
     hideVocabList();
@@ -728,6 +765,9 @@ public class PlayerActivity extends AppCompatActivity {
                                         } else if(position == 1){
                                             captionLoadMenuClickedPosition = 1;
                                             dialog.dismiss();
+                                        } else if(position == 2){
+                                            captionLoadMenuClickedPosition = 2;
+                                            dialog.dismiss();
                                         }
                                     }
                                 })
@@ -737,7 +777,12 @@ public class PlayerActivity extends AppCompatActivity {
                                         if(captionLoadMenuClickedPosition == 0){
                                             // load captions from the web;
                                             loadCaptionsFromWeb(filetitle);
-                                        } else if(captionLoadMenuClickedPosition == 1){
+                                        }
+                                        else if(captionLoadMenuClickedPosition == 1) {
+                                            // search cloud manually;
+                                            searchCloudManually();
+                                        }
+                                        else if(captionLoadMenuClickedPosition == 2){
                                             // launch filechooser.
                                             new ChooserDialog().with(PlayerActivity.this)
                                                     .withFilter(false, false, "srt", "ssa", "xml","dfxp","ttml","vtt")

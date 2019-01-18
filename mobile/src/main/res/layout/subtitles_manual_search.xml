@@ -19,26 +19,16 @@
             android:layout_centerVertical="true"
             android:id="@+id/linearLayout">
             <TextView
-                android:id="@+id/subtitles_header"
-                android:text="Loading Captions"
+                android:id="@+id/subtitles_manual_header"
+                android:text="Manual Search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/tint_color"
                 android:textSize="18sp" />
-
-            <pl.tajchert.waitingdots.DotsTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/dots"
-                android:layout_marginLeft="4dp"
-                android:textSize="18sp"
-                android:textColor="@color/tint_color"
-                dots:autoplay="true"
-                dots:period="1000"/>
         </LinearLayout>
 
         <TextView
-            android:id="@+id/powered_by"
+            android:id="@+id/powered_by_manual"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -52,15 +42,14 @@
     </RelativeLayout>
 
     <EditText
-        android:id="@+id/search_manually"
+        android:id="@+id/search_title_manually"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="4dp"
-        android:hint="Search Movie/Series(Season and Episode) Title Manually ..."
+        android:hint="Enter Movie/Series(Season and Episode) Title"
         android:imeOptions="actionSearch"
         android:textSize="16sp"
-        android:visibility="gone"
         android:typeface="sans" />
 </LinearLayout>
