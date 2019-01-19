@@ -642,7 +642,7 @@ public class PlayerActivity extends AppCompatActivity {
         protected void onProgressUpdate(Integer... progress) {}
 
         protected void onPostExecute(Long result) {
-            TextView subtitlesHeader = (TextView) findViewById(R.id.subtitles_header);
+            TextView subtitlesHeader = (TextView) findViewById(R.id.subtitles_loading_header);
             final EditText searchManually = (EditText) findViewById(R.id.search_manually);
             View view = findViewById(R.id.dots);
             if(view != null)
