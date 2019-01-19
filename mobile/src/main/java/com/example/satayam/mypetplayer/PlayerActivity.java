@@ -252,8 +252,17 @@ public class PlayerActivity extends AppCompatActivity {
         @Override
         public void onErrorResponse(VolleyError error) {
              Log.d("PlayerActiva", "Error: " + error.getMessage() +" word:"+word +" numberOfRequests"+numberOfRequests);
-             worddefList.remove(numberOfRequests-1);
-             numberOfRequests--;
+             if(numberOfRequests == 1){
+                 Worddefinition wdef = worddefList.get(updatedItemsInAdapter++);
+                 wdef.setDidload(true);
+                 wdef.setWord("Sorry");
+                 wdef.setDefinition("No vocabulary found for current subtitle cue !!!");
+                 wdef.setIsSorryCard(true);
+                 worddefAdapter.notifyDataSetChanged();
+             }else {
+                 worddefList.remove(numberOfRequests - 1);
+                 numberOfRequests--;
+             }
              worddefAdapter.notifyDataSetChanged();
          }
     });

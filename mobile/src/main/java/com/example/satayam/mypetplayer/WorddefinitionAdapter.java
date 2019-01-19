@@ -82,6 +82,10 @@ public class WorddefinitionAdapter extends RecyclerView.Adapter<WorddefinitionAd
             holder.dictcardview.setVisibility(View.VISIBLE);
         }
 
+        if(album.getIsSorryCard() == true){
+            holder.dictwordaudio.setVisibility(View.GONE);
+            holder.dicimportant.setVisibility(View.GONE);
+        }
         // loading album cover using Glide library
         // Glide.with(mContext).load(album.getThumbnail()).into(holder.thumbnail);
 

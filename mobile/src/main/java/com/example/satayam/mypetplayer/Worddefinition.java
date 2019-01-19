@@ -5,6 +5,7 @@ public class Worddefinition {
     private String definition;
     private boolean important;
     private boolean didload;
+    private boolean isSorryCard;
 
     public Worddefinition() {
     }
@@ -14,6 +15,7 @@ public class Worddefinition {
         this.definition = definition;
         this.important = important;
         this.didload = didload;
+        this.isSorryCard = false;
     }
 
     public String getWord() { return word; }
@@ -41,4 +43,8 @@ public class Worddefinition {
     public void setDidload(boolean didload){this.didload = didload;}
 
     public boolean getDidload() { return this.didload; }
+
+    public void setIsSorryCard(boolean isSorryCard){ this.isSorryCard = isSorryCard; }
+
+    public boolean getIsSorryCard() { return this.isSorryCard; }
 }
