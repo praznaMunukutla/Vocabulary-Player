@@ -13,14 +13,13 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:gravity="center"
-        android:text="Select Subtitle"
-        android:textColor="#737373"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginBottom="8dp"
-        android:textSize="18sp"
+        android:text="@string/select_subtitle"
+        android:textColor="@color/tint_color"
+        android:layout_marginTop="@dimen/select_subtitle_layout_margin_top"
+        android:layout_marginRight="@dimen/select_subtitle_layout_margin_right"
+        android:layout_marginLeft="@dimen/select_subtitle_layout_margin_left"
+        android:layout_marginBottom="@dimen/select_subtitle_layout_margin_bottom"
+        android:textSize="@dimen/select_subtitle_text_size"
         android:typeface="sans"
         app:fontFamily="sans-serif" />
 </LinearLayout>
-

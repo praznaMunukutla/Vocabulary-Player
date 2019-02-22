@@ -96,6 +96,14 @@ public class WorddefinitionAdapter extends RecyclerView.Adapter<WorddefinitionAd
                 speakerBox.play(holder.dictwordtitle.getText().toString());
             }
         });
+
+        holder.dicimportant.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                // save the json response and subtitle cue to Database.
+                holder.dicimportant.setImageResource(R.drawable.ic_star_black_24dp);
+            }
+        });
     }
 
     @Override

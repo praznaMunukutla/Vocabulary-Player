@@ -1,11 +1,15 @@
 package com.example.satayam.mypetplayer;
 
+import org.json.JSONArray;
+
 public class Worddefinition {
     private String word;
     private String definition;
     private boolean important;
     private boolean didload;
     private boolean isSorryCard;
+    private WordMeanings wordMeanings;
+    private JSONArray wordJson;
 
     public Worddefinition() {
     }
@@ -47,4 +51,12 @@ public class Worddefinition {
     public void setIsSorryCard(boolean isSorryCard){ this.isSorryCard = isSorryCard; }
 
     public boolean getIsSorryCard() { return this.isSorryCard; }
+
+    public void setWordMeanings(WordMeanings wordMeanings){ this.wordMeanings = wordMeanings; }
+    public WordMeanings getWordMeanings(){return this.wordMeanings;}
+
+    public void setWordJson(JSONArray wordJson){ this.wordJson = wordJson; }
+    public JSONArray getWordJson() { return this.wordJson; }
+
+
 }

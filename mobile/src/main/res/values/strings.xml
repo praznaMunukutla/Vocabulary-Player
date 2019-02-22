@@ -3,7 +3,6 @@
     <string name="video_list">Video</string>
     <string name="vocab_list">Vocab</string>
     <string name="player">Player</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -11,11 +10,45 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="storage_permission_denied">Permission to access storage was denied</string>
-
-
-    <string name="vedio_captions">Captions</string>
-    <string name="vedio_speed">Playback Speed</string>
-    <string name="vedio_playerdelete">Delete</string>
+    <string name="video_captions">Captions</string>
+    <string name="video_speed">Playback Speed</string>
+    <string name="video_playerdelete">Delete</string>
     <string name="select_caption">Select Caption</string>
+    <string name="bottom_menu_name">Captions</string>
+    <string name="selected_menu_name">Normal</string>
+    <string name="search_manually_hint">Search Movie/Series(Season and Episode) Title Manually ...</string>
+    <string name="bottom_menu_header">Search</string>
+    <string name="playback_title">Title</string>
+    <string name="loading_captions">Loading Captions</string>
+    <string name="powered_by">powered by Opensubtitles.org</string>
+    <string name="manual_search">Manual Search</string>
+    <string name="subtitle">Subtitle</string>
+    <string name="select_subtitle">Select Subtitle</string>
+    <string name="vocabulary">Vocabulary</string>
+    <string name="word">Word</string>
+    <string name="definition">Definition</string>
 
+    <string name="cloud">Cloud</string>
+    <string name="manually">Manually</string>
+    <string name="internalstorage">Internal Storage</string>
+
+    <string name="captions">Captions</string>
+    <string name="playbackspeed">Playback Speed</string>
+    <string name="loop">Loop</string>
+
+    <string name="on">On</string>
+    <string name="off">Off</string>
+
+    <string name="sorry">Sorry</string>
+    <string name="novocab">No vocabulary found for current subtitle cue !!!</string>
+
+    <string name="selectcaption">Select Caption</string>
+    <string name="nocaptionfound">No Captions Found</string>
+
+    <string name="synccaptiontoast">Syncing Downloaded Caption</string>
+    <string name="downloadcaption">Downloading Caption</string>
+    <string name="syncingcaption">Syncing Caption</string>
+
+    <string name="vocabsaved">Vocab Saved</string>
+    <string name="vocabremoved">Vocab Removed</string>
 </resources>

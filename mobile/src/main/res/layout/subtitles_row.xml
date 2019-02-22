@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="@dimen/captions_margin">
+    android:padding="@dimen/subtitles_row_padding">
 
     <TextView
         android:id="@+id/subtitle_title"
@@ -12,8 +12,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:text="Subtitle"
-        android:textColor="#737373"
-        android:textSize="16sp" />
+        android:text="@string/subtitle"
+        android:textColor="@color/tint_color"
+        android:textSize="@dimen/subtitle_text_size" />
 
 </LinearLayout>

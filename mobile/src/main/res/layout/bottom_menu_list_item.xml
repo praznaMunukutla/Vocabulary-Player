@@ -7,12 +7,12 @@
         android:padding="@dimen/captions_margin">
 
     <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginRight="32dp"
+            android:layout_width="@dimen/menu_width_height"
+            android:layout_height="@dimen/menu_width_height"
+            android:layout_marginRight="@dimen/menu_image_margin"
             android:id="@+id/bottommenu_option_image"
             android:src="@drawable/ic_bottom_menu"
-            android:tint="#737373"/>
+            android:tint="@color/tint_color"/>
 
     <TextView
         android:id="@+id/bottommenu_option_text"
@@ -20,20 +20,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:text="Captions"
-        android:textColor="#737373"
-        android:textSize="16sp" />
+        android:text="@string/bottom_menu_name"
+        android:textColor="@color/tint_color"
+        android:textSize="@dimen/menu_text_size" />
 
     <ImageView
         android:id="@+id/bottommenu_dot_image"
-        android:layout_width="6dp"
-        android:layout_height="6dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:visibility="invisible"
+        android:layout_width="@dimen/menu_dot_width"
+        android:layout_height="@dimen/menu_dot_height"
+        android:layout_marginTop="@dimen/menu_dot_top_margin"
+        android:layout_marginLeft="@dimen/menu_dot_left_right_margin"
+        android:layout_marginRight="@dimen/menu_dot_left_right_margin"
         android:src="@drawable/ic_fiber_manual_record_white_24dp"
-        android:tint="#737373" />
+        android:tint="@color/tint_color"
+        android:visibility="invisible" />
 
     <TextView
         android:id="@+id/bottommenu_option_selected"
@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:visibility="invisible"
-        android:text="Normal"
-        android:textColor="#737373"
-        android:textSize="16sp" />
+        android:text="@string/selected_menu_name"
+        android:textColor="@color/tint_color"
+        android:textSize="@dimen/menu_selected_option_text_size" />
 </LinearLayout>

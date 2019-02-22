@@ -14,24 +14,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_margin="16dp"
+            android:layout_margin="@dimen/subtitles_header_layout_margin"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:id="@+id/linearLayout">
             <TextView
                 android:id="@+id/subtitles_loading_header"
-                android:text="Loading Captions"
+                android:text="@string/loading_captions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/tint_color"
-                android:textSize="18sp" />
+                android:textSize="@dimen/subtitles_header_loading_captions_text_size" />
 
             <pl.tajchert.waitingdots.DotsTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/dots"
-                android:layout_marginLeft="4dp"
-                android:textSize="18sp"
+                android:layout_marginLeft="@dimen/subtitles_header_animating_dots_margin_left"
+                android:textSize="@dimen/subtitles_header_animating_dots_text_size"
                 android:textColor="@color/tint_color"
                 dots:autoplay="true"
                 dots:period="1000"/>
@@ -43,11 +43,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="powered by Opensubtitles.org"
+            android:text="@string/powered_by"
             android:textColor="@color/tint_color"
-            android:textSize="12sp"
+            android:textSize="@dimen/subtitles_header_powered_by_text_size"
             android:typeface="sans"
-            android:layout_marginRight="16dp"
+            android:layout_marginRight="@dimen/subtitles_header_powered_by_layout_margin_right"
             app:fontFamily="sans-serif" />
     </RelativeLayout>
 
@@ -55,12 +55,12 @@
         android:id="@+id/search_manually"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="4dp"
-        android:hint="Search Movie/Series(Season and Episode) Title Manually ..."
+        android:layout_marginLeft="@dimen/subtitles_header_search_manually_layout_margin_left"
+        android:layout_marginRight="@dimen/subtitles_header_search_manually_layout_margin_right"
+        android:layout_marginTop="@dimen/subtitles_header_search_manually_layout_margin_top"
+        android:hint="@string/search_manually_hint"
         android:imeOptions="actionSearch"
-        android:textSize="16sp"
+        android:textSize="@dimen/search_manually_hint_text_size"
         android:visibility="gone"
         android:typeface="sans" />
 </LinearLayout>

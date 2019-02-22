@@ -14,17 +14,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_margin="16dp"
+            android:layout_margin="@dimen/subtitles_manually_search_layout_margin"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:id="@+id/linearLayout">
             <TextView
                 android:id="@+id/subtitles_manual_header"
-                android:text="Manual Search"
+                android:text="@string/manual_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/tint_color"
-                android:textSize="18sp" />
+                android:textSize="@dimen/subtitles_manually_search_text_size" />
         </LinearLayout>
 
         <TextView
@@ -33,11 +33,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="powered by Opensubtitles.org"
+            android:text="@string/powered_by"
             android:textColor="@color/tint_color"
-            android:textSize="12sp"
+            android:textSize="@dimen/subtitles_header_powered_by_text_size"
             android:typeface="sans"
-            android:layout_marginRight="16dp"
+            android:layout_marginRight="@dimen/subtitles_header_powered_by_layout_margin_right"
             app:fontFamily="sans-serif" />
     </RelativeLayout>
 
@@ -45,11 +45,11 @@
         android:id="@+id/search_title_manually"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="4dp"
-        android:hint="Enter Movie/Series(Season and Episode) Title"
+        android:layout_marginLeft="@dimen/subtitles_header_search_manually_layout_margin_left"
+        android:layout_marginRight="@dimen/subtitles_header_search_manually_layout_margin_right"
+        android:layout_marginTop="@dimen/subtitles_header_search_manually_layout_margin_top"
+        android:hint="@string/search_manually_hint"
         android:imeOptions="actionSearch"
-        android:textSize="16sp"
+        android:textSize="@dimen/search_manually_hint_text_size"
         android:typeface="sans" />
 </LinearLayout>

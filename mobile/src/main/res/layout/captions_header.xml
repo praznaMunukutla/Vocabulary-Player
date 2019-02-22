@@ -12,15 +12,15 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:text="Search"
+        android:text="@string/bottom_menu_header"
         android:textAllCaps="false"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginBottom="8dp"
-        android:textSize="18sp"
+        android:layout_marginTop="@dimen/menu_header_top_left_margin"
+        android:layout_marginLeft="@dimen/menu_header_top_left_margin"
+        android:layout_marginBottom="@dimen/menu_header_bottom_margin"
+        android:textSize="@dimen/menu_header_text_size"
         android:typeface="sans"
         app:fontFamily="sans-serif"
-        android:tint="#737373"/>
+        android:tint="@color/tint_color"/>
 
 </LinearLayout>
 

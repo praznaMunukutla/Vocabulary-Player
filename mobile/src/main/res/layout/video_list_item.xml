@@ -20,20 +20,20 @@
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:minHeight="?android:attr/listPreferredItemHeight"
-    android:padding="16dp"
+    android:padding="@dimen/video_list_layout_padding"
     android:id="@+id/video_list_item">
 
     <ImageView
         android:id="@+id/video_thumbnail"
-        android:layout_width="80dp"
-        android:layout_height="50dp"/>
+        android:layout_width="@dimen/video_list_thumbnail_width"
+        android:layout_height="@dimen/video_list_thumbnail_height"/>
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:layout_width="@dimen/video_list_item_layout_width"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingLeft="16dp">
+        android:paddingLeft="@dimen/video_list_item_padding_left">
 
         <TextView
             android:id="@+id/video_title"

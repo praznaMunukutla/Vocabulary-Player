@@ -35,7 +35,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="12dp">
+            android:layout_margin="@dimen/playback_title_header_margin">
 
             <ImageButton
                 android:id="@+id/videoback"
@@ -50,15 +50,15 @@
             <TextView
                 android:id="@+id/videotitle"
                 android:layout_height="wrap_content"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/playback_title_layout_width"
                 android:layout_weight="10"
                 android:ellipsize="end"
                 android:fontFamily="sans-serif"
                 android:singleLine="true"
-                android:text="Title"
-                android:textColor="#ffffff"
-                android:textSize="16sp"
-                android:layout_marginLeft="8dp"
+                android:text="@string/playback_title"
+                android:textColor="@color/playback_title_color"
+                android:textSize="@dimen/playback_title_text_size"
+                android:layout_marginLeft="@dimen/playback_title_left_margin"
                 app:fontFamily="sans-serif"
                 tools:fontFamily="sans-serif" />
 
@@ -93,13 +93,13 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingTop="4dp"
+        android:paddingTop="@dimen/playback_middle_padding_top"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true">
 
         <ImageButton
             android:id="@id/exo_rew"
-            android:layout_marginRight="32dp"
+            android:layout_marginRight="@dimen/playback_middle_rewind_back_margin_right"
             android:src="@drawable/ic_replay_10_white_24dp"
             style="@style/ExoMediaButton.Rewind"/>
 
@@ -115,7 +115,7 @@
 
         <ImageButton
             android:id="@id/exo_ffwd"
-            android:layout_marginLeft="32dp"
+            android:layout_marginLeft="@dimen/playback_middle_forward_margin_left"
             android:src="@drawable/ic_forward_10_white_24dp"
             style="@style/ExoMediaButton.FastForward"/>
 
@@ -131,7 +131,7 @@
             android:id="@+id/videofooter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_margin="@dimen/playback_footer_margin"
             android:orientation="horizontal">
 
             <TextView
@@ -139,21 +139,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
-                android:padding="4dp"
-                android:textColor="#ffffff"
-                android:textSize="12sp"
+                android:padding="@dimen/playback_footer_current_time_padding"
+                android:textColor="@color/playback_current_time_color"
+                android:textSize="@dimen/playback_footer_current_time_text_size"
                 android:textStyle="normal"
                 app:fontFamily="sans-serif" />
 
             <com.google.android.exoplayer2.ui.DefaultTimeBar
                 android:id="@id/exo_progress"
-                android:layout_width="0dp"
-                android:layout_height="26dp"
+                android:layout_width="@dimen/playback_footer_timebar_layout_width"
+                android:layout_height="@dimen/playback_footer_timebar_height"
                 android:layout_weight="1"
-                app:bar_height="2dp"
+                app:bar_height="@dimen/playback_footer_appbar_height"
                 app:buffered_color="@android:color/darker_gray"
-                app:played_color="#ff0000"
-                app:scrubber_color="#ff0000"
+                app:played_color="@color/playback_played_color"
+                app:scrubber_color="@color/playback_scrubber_color"
                 app:unplayed_color="@android:color/darker_gray" />
 
             <TextView
@@ -161,16 +161,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
-                android:padding="4dp"
-                android:textColor="#ffffff"
-                android:textSize="12sp"
+                android:padding="@dimen/playback_footer_duration_time_padding"
+                android:textColor="@color/playback_duration_time_color"
+                android:textSize="@dimen/playback_footer_duration_text_size"
                 android:textStyle="normal"
                 app:fontFamily="sans-serif" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="12dp"
+                android:layout_marginLeft="@dimen/playback_footer_closed_caption_layout_margin_left"
                 android:layout_alignParentRight="true"
                 android:orientation="vertical">
 
@@ -183,12 +183,11 @@
 
                 <View
                     android:id="@+id/videoclosedcaptionenable"
-                    android:layout_width="24dp"
+                    android:layout_width="@dimen/playback_footer_closed_caption_underline_layout_width"
                     android:layout_height="match_parent"
                     android:visibility="invisible"
                     android:background="@android:color/holo_red_dark" />
             </LinearLayout>
-
 
         </LinearLayout>
     </LinearLayout>

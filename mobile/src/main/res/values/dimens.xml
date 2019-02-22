@@ -17,11 +17,11 @@
     <dimen name="backdrop_title">30dp</dimen>
     <dimen name="backdrop_subtitle">18dp</dimen>
     <dimen name="card_margin_top">2dp</dimen>
-    <dimen name="card_margin">5dp</dimen>
-    <dimen name="card_album_radius">3dp</dimen>
+    <dimen name="vocab_card_view_margin">5dp</dimen>
+    <dimen name="vocab_card_view_album_radius">3dp</dimen>
     <dimen name="dict_word_height">160dp</dimen>
     <dimen name="album_cover_height">160dp</dimen>
-    <dimen name="album_title_padding">10dp</dimen>
+
     <dimen name="album_title">15dp</dimen>
     <dimen name="dictword_title">15dp</dimen>
     <dimen name="dict_definition">12dp</dimen>
@@ -30,10 +30,6 @@
 
     <dimen name="ic_volume_width">20dp</dimen>
     <dimen name="ic_volume_height">30dp</dimen>
-
-    <dimen name="ic_dict_padding">5dp</dimen>
-
-    <dimen name="ic_dict_icons_margin">8dp</dimen>
 
     <dimen name="ic_album_overflow_width">20dp</dimen>
     <dimen name="ic_album_overflow_height">30dp</dimen>
@@ -44,4 +40,113 @@
 
     <dimen name="row_padding_vertical">10dp</dimen>
     <dimen name="subtitle_margin">4dp</dimen>
+
+    <dimen name="menu_width_height">24dp</dimen>
+    <dimen name="menu_image_margin">32dp</dimen>
+    <dimen name="menu_text_size">16sp</dimen>
+
+    <dimen name="menu_dot_width">6dp</dimen>
+    <dimen name="menu_dot_height">10dp</dimen>
+    <dimen name="menu_dot_left_right_margin">16dp</dimen>
+    <dimen name="menu_dot_top_margin">12dp</dimen>
+
+    <dimen name="menu_selected_option_text_size">16sp</dimen>
+
+    <dimen name="menu_header_text_size">18sp</dimen>
+    <dimen name="menu_header_top_left_margin">16dp</dimen>
+    <dimen name="menu_header_bottom_margin">8dp</dimen>
+
+
+    <dimen name="playback_title_layout_width">0dp</dimen>
+    <dimen name="playback_title_header_margin">12dp</dimen>
+    <dimen name="playback_title_text_size">16sp</dimen>
+    <dimen name="playback_title_left_margin">8dp</dimen>
+
+    <dimen name="playback_middle_padding_top">4dp</dimen>
+    <dimen name="playback_middle_rewind_back_margin_right">32dp</dimen>
+    <dimen name="playback_middle_forward_margin_left">32dp</dimen>
+
+
+    <dimen name="playback_footer_margin">16dp</dimen>
+    <dimen name="playback_footer_current_time_padding">4dp</dimen>
+    <dimen name="playback_footer_current_time_text_size">12sp</dimen>
+
+
+    <dimen name="playback_footer_timebar_layout_width">0dp</dimen>
+    <dimen name="playback_footer_timebar_height">26dp</dimen>
+    <dimen name="playback_footer_appbar_height">2dp</dimen>
+
+    <dimen name="playback_footer_duration_time_padding">4dp</dimen>
+    <dimen name="playback_footer_duration_text_size">12sp</dimen>
+    <dimen name="playback_footer_closed_caption_layout_margin_left">12dp</dimen>
+
+    <dimen name="playback_footer_closed_caption_underline_layout_width">24dp</dimen>
+
+    <dimen name="subtitles_header_layout_margin">16dp</dimen>
+    <dimen name="subtitles_header_loading_captions_text_size">18sp</dimen>
+
+    <dimen name="subtitles_header_animating_dots_margin_left">4dp</dimen>
+    <dimen name="subtitles_header_animating_dots_text_size">18sp</dimen>
+    <dimen name="subtitles_header_powered_by_text_size">12sp</dimen>
+    <dimen name="subtitles_header_powered_by_layout_margin_right">16dp</dimen>
+
+    <dimen name="subtitles_header_search_manually_layout_margin_left">16dp</dimen>
+    <dimen name="subtitles_header_search_manually_layout_margin_right">16dp</dimen>
+    <dimen name="subtitles_header_search_manually_layout_margin_top">4dp</dimen>
+    <dimen name="search_manually_hint_text_size">16sp</dimen>
+
+    <dimen name="subtitles_manually_search_layout_margin">16dp</dimen>
+    <dimen name="subtitles_manually_search_text_size">18sp</dimen>
+
+    <dimen name="subtitles_row_padding">16dp</dimen>
+    <dimen name="subtitle_text_size">16sp</dimen>
+
+    <dimen name="select_subtitle_text_size">18sp</dimen>
+    <dimen name="select_subtitle_layout_margin_top">16dp</dimen>
+    <dimen name="select_subtitle_layout_margin_right">16dp</dimen>
+    <dimen name="select_subtitle_layout_margin_left">16dp</dimen>
+    <dimen name="select_subtitle_layout_margin_bottom">8dp</dimen>
+
+    <dimen name="video_list_layout_padding">16dp</dimen>
+    <dimen name="video_list_thumbnail_width">100dp</dimen>
+    <dimen name="video_list_thumbnail_height">70dp</dimen>
+
+    <dimen name="video_list_item_layout_width">0dp</dimen>
+    <dimen name="video_list_item_padding_left">16dp</dimen>
+
+    <dimen name="vocab_list_layout_padding">16dp</dimen>
+
+    <dimen name="vocab_list_height">300dp</dimen>
+
+    <dimen name="vocab_text_layout_margin_top">4dp</dimen>
+    <dimen name="vocab_text_layout_margin_left">8dp</dimen>
+    <dimen name="vocab_text_size">16sp</dimen>
+    <dimen name="vocab_layout_margin_right">2dp</dimen>
+
+    <dimen name="vocab_icon_layout_margin_top">4dp</dimen>
+    <dimen name="vocab_icon_layout_margin_right">4dp</dimen>
+
+    <dimen name="vocab_recycler_view_layout_margin_top">4dp</dimen>
+    <dimen name="vocab_recycler_view_layout_margin_start">4dp</dimen>
+
+    <dimen name="vocab_card_view_layout_width">200dp</dimen>
+
+    <dimen name="vocab_card_view_elevation">3dp</dimen>
+
+    <dimen name="vocab_title_padding">5dp</dimen>
+    <dimen name="vocab_title_text_size">16sp</dimen>
+    <dimen name="vocab_title_layout_margin_right">2dp</dimen>
+    <dimen name="vocab_icons_margin">8dp</dimen>
+    <dimen name="vocab_def_title_padding">10dp</dimen>
+
+    <dimen name="shimmer_padding_left">4dp</dimen>
+    <dimen name="shimmer_padding_right">15dp</dimen>
+
+
+    <dimen name="shimmer_title_layout_width">50dp</dimen>
+    <dimen name="shimmer_title_layout_height">10dp</dimen>
+    <dimen name="shimmer_title_layout_margin">9dp</dimen>
+
+    <dimen name="shimmer_description_layout_height">4dp</dimen>
+    <dimen name="shimmer_description_layout_margin">8dp</dimen>
 </resources>

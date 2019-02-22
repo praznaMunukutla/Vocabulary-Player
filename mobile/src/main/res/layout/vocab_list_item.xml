@@ -20,7 +20,7 @@
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:minHeight="?android:attr/listPreferredItemHeight"
-    android:padding="16dp">
+    android:padding="@dimen/vocab_list_layout_padding">
 
     <TextView
         android:id="@+id/version_name"

@@ -158,7 +158,7 @@ public class PlayerActivity extends AppCompatActivity {
   public static HashSet<String> ignoreList = new HashSet<String>(Arrays.asList("to","of","in","for","on","with","at","by","from","up","about","into","over","after","the","and","a","that","i","it","not","he","as","you","this","but","his","they","her","she","or","an","will","my","one","all","would","there","their","be","have","do","is","i"));
   public static int updatedItemsInAdapter = 0;
   public static int numberOfRequests = 0;
-  public static final String URL_DICT = "https://googledictionaryapi.eu-gb.mybluemix.net/?define=";
+  public static final String URL_DICT = "https://mydictionaryapi.appspot.com/?define=";
 
   private RecyclerView worddefRecyclerView;
   //private ShimmerRecyclerViewX worddefRecyclerView;
@@ -170,14 +170,14 @@ public class PlayerActivity extends AppCompatActivity {
   private Speakerbox mSpeakerBox;
 
   private void createLoadCaptionOptions(){
-      dialogLoadCaptionLists.add(new DialogList(R.drawable.ic_cloud, "Cloud Automatically", true, false, ""));
-      dialogLoadCaptionLists.add(new DialogList(R.drawable.ic_keyboard, "Cloud Manually", true, false, ""));
-      dialogLoadCaptionLists.add(new DialogList(R.drawable.ic_smartphone, "Internal Storage", true, false, ""));
+      dialogLoadCaptionLists.add(new DialogList(R.drawable.ic_cloud, getString(R.string.cloud), true, false, ""));
+      dialogLoadCaptionLists.add(new DialogList(R.drawable.ic_keyboard, getString(R.string.manually), true, false, ""));
+      dialogLoadCaptionLists.add(new DialogList(R.drawable.ic_smartphone, getString(R.string.internalstorage), true, false, ""));
   }
   private void createBottomSheetOptions() {
-      dialogLists.add(new DialogList(R.drawable.ic_subtitles_black_24dp, "Captions", true, false, ""));
-      dialogLists.add(new DialogList(R.drawable.ic_slow_motion_video_black_24dp, "Playback Speed", true, true, playbackSpeedOptionsStrings[playbackSpeedSelectedPosition]));
-      dialogLists.add(new DialogList(R.drawable.ic_loop_white_24dp, "Loop", true, true, "Off"));
+      dialogLists.add(new DialogList(R.drawable.ic_subtitles_black_24dp, getString(R.string.captions), true, false, ""));
+      dialogLists.add(new DialogList(R.drawable.ic_slow_motion_video_black_24dp, getString(R.string.playbackspeed), true, true, playbackSpeedOptionsStrings[playbackSpeedSelectedPosition]));
+      dialogLists.add(new DialogList(R.drawable.ic_loop_white_24dp, getString(R.string.loop), true, true, getString(R.string.off)));
   }
 
   private void createBottomSheetPlaybackSpeedOptions() {
@@ -187,8 +187,8 @@ public class PlayerActivity extends AppCompatActivity {
   }
 
   private void createBottomSheetOnOffOptions(){
-      dialogOnOffLists.add(new DialogList(R.drawable.ic_done_black_24dp, "On", loopPlayPosition == 0, false, ""));
-      dialogOnOffLists.add(new DialogList(R.drawable.ic_done_black_24dp, "Off", loopPlayPosition == 1, false, ""));
+      dialogOnOffLists.add(new DialogList(R.drawable.ic_done_black_24dp, getString(R.string.on), loopPlayPosition == 0, false, ""));
+      dialogOnOffLists.add(new DialogList(R.drawable.ic_done_black_24dp, getString(R.string.off), loopPlayPosition == 1, false, ""));
   }
 
   private void launchDictionaryService(String subtitle){
@@ -242,8 +242,11 @@ public class PlayerActivity extends AppCompatActivity {
                          Worddefinition wdef = worddefList.get(updatedItemsInAdapter++);
                          wdef.setDidload(true);
                          WordMeanings wordResult = parseJson(response);
+                         wdef.setWordJson(response);
+                         wdef.setWordMeanings(wordResult);
                          wdef.setWord(wordResult.getWord());
                          wdef.setDefinition(wordResult.getFirstMeaning() != null ? wordResult.getFirstMeaning() : "Sorry Definition Not Found !!!");
+
                          wordmeaningList.add(wordResult);
                          worddefAdapter.notifyDataSetChanged();
                      }
@@ -255,8 +258,8 @@ public class PlayerActivity extends AppCompatActivity {
              if(numberOfRequests == 1){
                  Worddefinition wdef = worddefList.get(updatedItemsInAdapter++);
                  wdef.setDidload(true);
-                 wdef.setWord("Sorry");
-                 wdef.setDefinition("No vocabulary found for current subtitle cue !!!");
+                 wdef.setWord(getString(R.string.sorry));
+                 wdef.setDefinition(getString(R.string.novocab));
                  wdef.setIsSorryCard(true);
                  worddefAdapter.notifyDataSetChanged();
              }else {
@@ -619,7 +622,7 @@ public class PlayerActivity extends AppCompatActivity {
 
         protected void onPostExecute(Long result) {
             addSubtitlesToMedia(Uri.parse("file:///"+downloadedFile.getAbsolutePath()));
-            Toast.makeText(PlayerActivity.this, "Syncing Downloaded Caption", Toast.LENGTH_SHORT).show();
+            Toast.makeText(PlayerActivity.this, getString(R.string.synccaptiontoast), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -649,11 +652,11 @@ public class PlayerActivity extends AppCompatActivity {
                 view.setVisibility(View.GONE);
             if(mSubtitleList != null && mSubtitleList.length != 0) {
                 prepareSubtitleData();
-                subtitlesHeader.setText("Select Caption");
+                subtitlesHeader.setText(getString(R.string.selectcaption));
                 if (subtitleLoadingDialogAdapter != null)
                     subtitleLoadingDialogAdapter.notifyDataSetChanged();
             } else {
-                subtitlesHeader.setText("No Captions Found");
+                subtitlesHeader.setText(getString(R.string.nocaptionfound));
                 searchManually.setVisibility(View.VISIBLE);
                 searchManually.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                     @Override
@@ -681,7 +684,7 @@ public class PlayerActivity extends AppCompatActivity {
                   @Override
                   public void onItemClick(@NonNull DialogPlus dialog, @NonNull Object item, @NonNull View view, int position) {
                       OpenSubtitleItem downloadItem =  mSubtitleList[position];
-                      Toast.makeText(PlayerActivity.this, "Downloading Caption", Toast.LENGTH_SHORT).show();
+                      Toast.makeText(PlayerActivity.this, getString(R.string.downloadcaption), Toast.LENGTH_SHORT).show();
                       new DownloadSubtitlesForVideo().execute(downloadItem);
                       dialog.dismiss();
                   }
@@ -802,7 +805,7 @@ public class PlayerActivity extends AppCompatActivity {
                                                         @Override
                                                         public void onChoosePath(String path, File pathFile) {
                                                             addSubtitlesToMedia(Uri.parse("file://"+path));
-                                                            Toast.makeText(PlayerActivity.this, "Syncing Caption", Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(PlayerActivity.this, getString(R.string.syncingcaption), Toast.LENGTH_SHORT).show();
                                                         }
                                                     })
                                                     .withOnDismissListener(new DialogInterface.OnDismissListener(){
